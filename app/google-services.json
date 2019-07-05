@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "617681961852",
+    "firebase_url": "https://connectit-189ed.firebaseio.com",
+    "project_id": "connectit-189ed",
+    "storage_bucket": "connectit-189ed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:617681961852:android:7b5bd76f345d3275",
+        "android_client_info": {
+          "package_name": "com.example.connectit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "617681961852-2hac1imt9iliuk146cqllemmb52cr3en.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.connectit",
+            "certificate_hash": "137a92cde220be76c98d199c18ae5c6b7c8a4e75"
+          }
+        },
+        {
+          "client_id": "617681961852-v73rd1btpt3r8b8fb2b3icputrsj8rcr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtHGgdl0lYPtosw-kpC5Ysmau-SggyURE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "617681961852-v73rd1btpt3r8b8fb2b3icputrsj8rcr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
