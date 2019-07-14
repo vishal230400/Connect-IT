@@ -128,7 +128,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                     }
                     else button.setText("follow");
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 

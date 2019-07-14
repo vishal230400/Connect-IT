@@ -36,8 +36,6 @@
             android:layout_alignParentEnd="true"
             android:src="@drawable/ic_inbox"
             />
-
-
         </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
