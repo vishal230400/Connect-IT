@@ -12,13 +12,14 @@ import android.view.MenuItem;
 
 import com.example.connectit.Fragment.HomeFragment;
 import com.example.connectit.Fragment.NotificationFragment;
+import com.example.connectit.Fragment.PostDetailFragment;
 import com.example.connectit.Fragment.ProfileFragment;
 import com.example.connectit.Fragment.SearchFragment;
 import com.google.android.gms.common.util.SharedPreferencesUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class MainActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener,NotificationFragment.OnFragmentInteractionListener,ProfileFragment.OnFragmentInteractionListener,SearchFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements PostDetailFragment.OnFragmentInteractionListener,HomeFragment.OnFragmentInteractionListener,NotificationFragment.OnFragmentInteractionListener,ProfileFragment.OnFragmentInteractionListener,SearchFragment.OnFragmentInteractionListener{
 
     BottomNavigationView bottomNavigationView;
     Fragment selectedFragment=null;

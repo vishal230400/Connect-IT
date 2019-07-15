@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.connectit.Adapter.MyPhotoAdapter;
@@ -60,7 +62,8 @@ public class ProfileFragment extends Fragment {
 
     RecyclerView recyclerView;
     MyPhotoAdapter myPhotoAdapter;
-    List<Post> postList;
+    List<Post> postList,postList_saved;
+    List<String> mySaves;
 
     public FirebaseUser firebaseUser;
     public String profileid;
@@ -130,6 +133,8 @@ public class ProfileFragment extends Fragment {
         postList =new ArrayList<>();
         myPhotoAdapter=new MyPhotoAdapter(getContext(),postList);
         recyclerView.setAdapter(myPhotoAdapter);
+        recyclerView.setVisibility(View.VISIBLE);
+
 
         myPhotos();
         userInfo();
@@ -164,9 +169,81 @@ public class ProfileFragment extends Fragment {
                 }
             }
         });
+
+        my_photos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myPhotos();
+                }
+        });
+
+        saved_photos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mysaved();
+            }
+        });
+
         return view;
     }
 
+
+    public void mysaved()
+    {
+        mySaves=new ArrayList<>();
+        DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Saves").child(firebaseUser.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot:dataSnapshot.getChildren())
+                {
+                    mySaves.add(snapshot.getKey());
+                }
+                readSaves();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void readSaves()
+    {
+        DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Posts");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                recyclerView.removeAllViews();
+                postList.clear();
+
+                for(DataSnapshot snapshot:dataSnapshot.getChildren())
+                {
+                    Post post = snapshot.getValue(Post.class);
+                    for(String id:mySaves)
+                    {
+                        if (post.getPostid().equals(id))
+                        {
+                            postList.add(post);
+                        }
+                    }
+                }
+                List<Post> temp=new ArrayList<>();
+
+                for(int i=0;i<postList.size();i++)
+                {
+                    temp.add(postList.get(postList.size()-i-1));
+                }
+                recyclerView.setAdapter(new MyPhotoAdapter(getContext(),temp));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     public void myPhotos()
     {
