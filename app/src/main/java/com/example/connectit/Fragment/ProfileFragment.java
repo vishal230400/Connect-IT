@@ -1,6 +1,7 @@
 package com.example.connectit.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.connectit.Adapter.MyPhotoAdapter;
+import com.example.connectit.EditProfileActivity;
+import com.example.connectit.MainActivity;
 import com.example.connectit.Model.Post;
 import com.example.connectit.Model.User;
 import com.example.connectit.R;
@@ -155,7 +158,7 @@ public class ProfileFragment extends Fragment {
                 String btn=edit_profile.getText().toString();
                 if(btn.equals("Edit Profile"))
                 {
-
+                    startActivity(new Intent(getContext(), EditProfileActivity.class));
                 }
                 else if(btn.equals("follow"))
                 {
