@@ -15,7 +15,9 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.connectit.CommentsActivity;
+import com.example.connectit.FollowersActivity;
 import com.example.connectit.Fragment.PostDetailFragment;
 import com.example.connectit.Fragment.ProfileFragment;
 import com.example.connectit.Model.Post;
@@ -29,6 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
@@ -55,7 +58,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
         final Post post=mPost.get(position);
 
-        Glide.with(mContext).load(post.getPostimage()).into(holder.post_image);
+        Glide.with(mContext).load(post.getPostimage()).apply(new RequestOptions().placeholder(R.drawable.placeholder_image)).into(holder.post_image);
 
         if(post.getDescription().equals(""))
         {
@@ -77,6 +80,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
                 if(holder.like.getTag().equals("like"))
                 {
                     FirebaseDatabase.getInstance().getReference().child("Likes").child(post.getPostid()).child(firebaseUser.getUid()).setValue(true);
+                    addNotification(post.getPublisher(),post.getPostid());
                 }else
                 {
                     FirebaseDatabase.getInstance().getReference().child("Likes").child(post.getPostid()).child(firebaseUser.getUid()).removeValue();
@@ -89,6 +93,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
             public void onClick(View v) {
                 Intent intent=new Intent(mContext, CommentsActivity.class);
                 intent.putExtra("postid",post.getPostid());
+                intent.putExtra("postpubid",post.getPublisher());
                 intent.putExtra("publisherid",firebaseUser.getUid());
                 mContext.startActivity(intent);
             }
@@ -99,6 +104,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
             public void onClick(View v) {
                 Intent intent=new Intent(mContext, CommentsActivity.class);
                 intent.putExtra("postid",post.getPostid());
+                intent.putExtra("postpubid",post.getPublisher());
                 intent.putExtra("publisherid",firebaseUser.getUid());
                 mContext.startActivity(intent);
             }
@@ -115,6 +121,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
             }
         });
 
+        holder.likes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent=new Intent(mContext, FollowersActivity.class);
+                intent.putExtra("id",post.getPostid());
+                intent.putExtra("title","Likes");
+                mContext.startActivity(intent);
+            }
+        });
 
         holder.username.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,6 +176,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
                     FirebaseDatabase.getInstance().getReference().child("Saves").child(firebaseUser.getUid()).child(post.getPostid()).removeValue();
             }
         });
+    }
+
+
+
+    public void addNotification(String userid,String postid)
+    {
+        DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("Notifications").child(userid);
+        HashMap<String,Object> hashMap=new HashMap<>();
+        hashMap.put("userid",firebaseUser.getUid());
+        hashMap.put("postid",postid);
+        hashMap.put("text","liked your post");
+        hashMap.put("ispost",true);
+
+        databaseReference.push().setValue(hashMap);
     }
 
     @Override

@@ -6,6 +6,8 @@ public class Comment {
     public Comment()
     {}
 
+
+
     public String getComment() {
         return comment;
     }

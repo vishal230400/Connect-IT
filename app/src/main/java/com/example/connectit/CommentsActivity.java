@@ -41,7 +41,7 @@ public class CommentsActivity extends AppCompatActivity {
     ImageView image_profile;
     TextView post;
 
-    String postid,publisherid;
+    String postid,publisherid,postpubid;
 
     FirebaseUser firebaseUser;
 
@@ -78,6 +78,7 @@ public class CommentsActivity extends AppCompatActivity {
         Intent intent=getIntent();
         postid=intent.getStringExtra("postid");
         publisherid=intent.getStringExtra("publisherid");
+        postpubid=intent.getStringExtra("postpubid");
 
         post.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,7 +108,8 @@ public class CommentsActivity extends AppCompatActivity {
 
         reference.push().setValue(hashMap);
 
-        addcomment.setText("");
+
+        addNotification();
 
         getImage();
     }
@@ -129,6 +131,20 @@ public class CommentsActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void addNotification()
+    {
+        DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("Notifications").child(postpubid);
+        HashMap<String,Object> hashMap=new HashMap<>();
+        hashMap.put("userid",firebaseUser.getUid());
+        hashMap.put("postid",postid);
+        hashMap.put("text","commented: "+addcomment.getText().toString());
+        hashMap.put("ispost",true);
+
+        databaseReference.push().setValue(hashMap);
+
+        addcomment.setText("");
     }
 
     public void readComments()

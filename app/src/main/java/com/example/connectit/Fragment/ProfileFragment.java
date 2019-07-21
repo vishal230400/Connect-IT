@@ -25,9 +25,11 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.connectit.Adapter.MyPhotoAdapter;
 import com.example.connectit.EditProfileActivity;
+import com.example.connectit.FollowersActivity;
 import com.example.connectit.MainActivity;
 import com.example.connectit.Model.Post;
 import com.example.connectit.Model.User;
+import com.example.connectit.OptionsActivity;
 import com.example.connectit.R;
 import com.google.android.gms.common.util.SharedPreferencesUtils;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,6 +41,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -65,7 +68,7 @@ public class ProfileFragment extends Fragment {
 
     RecyclerView recyclerView;
     MyPhotoAdapter myPhotoAdapter;
-    List<Post> postList,postList_saved;
+    List<Post> postList;
     List<String> mySaves;
 
     public FirebaseUser firebaseUser;
@@ -129,6 +132,13 @@ public class ProfileFragment extends Fragment {
         my_photos=view.findViewById(R.id.my_photos);
         saved_photos=view.findViewById(R.id.saved_photos);
 
+        options.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), OptionsActivity.class));
+            }
+        });
+
         recyclerView=view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager=new GridLayoutManager(getContext(),3);
@@ -164,12 +174,34 @@ public class ProfileFragment extends Fragment {
                 {
                     FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid()).child("following").child(profileid).setValue(true);
                     FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid()).child("followers").child(profileid).setValue(true);
+                    addNotification();
                 }
                 else if(btn.equals("following"))
                 {
                     FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid()).child("following").child(profileid).removeValue();
                     FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid()).child("followers").child(profileid).removeValue();
                 }
+            }
+        });
+
+        followers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getContext(), FollowersActivity.class);
+                intent.putExtra("id",profileid);
+                intent.putExtra("title","Followers");
+                startActivity(intent);
+            }
+        });
+
+
+        following.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getContext(), FollowersActivity.class);
+                intent.putExtra("id",profileid);
+                intent.putExtra("title","Following");
+                startActivity(intent);
             }
         });
 
@@ -188,6 +220,18 @@ public class ProfileFragment extends Fragment {
         });
 
         return view;
+    }
+
+    public void addNotification()
+    {
+        DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("Notifications").child(profileid);
+        HashMap<String,Object> hashMap=new HashMap<>();
+        hashMap.put("userid",firebaseUser.getUid());
+        hashMap.put("postid","");
+        hashMap.put("text"," started following you");
+        hashMap.put("ispost",false);
+
+        databaseReference.push().setValue(hashMap);
     }
 
 
