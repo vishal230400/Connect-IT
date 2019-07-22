@@ -107,6 +107,7 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 updateprofile(fullname.getText().toString(),username.getText().toString(),bio.getText().toString());
+                finish();
             }
         });
     }

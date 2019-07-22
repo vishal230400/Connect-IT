@@ -7,7 +7,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.example.connectit.Adapter.PostAdapter;
-import com.example.connectit.Adapter.StoryAdapter;
 import com.example.connectit.Model.Post;
 import com.example.connectit.Model.Story;
 import com.example.connectit.R;
@@ -50,10 +48,8 @@ public class HomeFragment extends Fragment {
     private String mParam2;
 
     public ProgressBar progressBar;
-    public RecyclerView recyclerView_story,recyclerView;
-    public StoryAdapter storyAdapter;
+    public RecyclerView recyclerView;
     public PostAdapter postAdapter;
-    public List<Story> storyList;
     public List<Post> postList;
     public List<String> followingList;
 
@@ -103,57 +99,10 @@ public class HomeFragment extends Fragment {
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         postList=new ArrayList<>();
-        storyList=new ArrayList<>();
         progressBar=view.findViewById(R.id.progress_circular);
         postAdapter=new PostAdapter(getContext(),postList);
         checkFollowing();
-        recyclerView_story=view.findViewById(R.id.recycler_view_story);
-        recyclerView_story.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager1=new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
-        recyclerView_story.setLayoutManager(linearLayoutManager1);
-        storyList=new ArrayList<>();
-        storyAdapter=new StoryAdapter(getContext(),storyList);
-        recyclerView_story.setAdapter(storyAdapter);
         return view;
-    }
-
-
-    public void readStories()
-    {
-        DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Story");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                long timecount=System.currentTimeMillis();
-                storyList.clear();
-                recyclerView_story.removeAllViews();
-                storyList.add(new Story("",0,0,"",FirebaseAuth.getInstance().getCurrentUser().getUid()));
-                for (String id:followingList)
-                {
-                    int countstory=0;
-                    Story story=null;
-                    for(DataSnapshot snapshot:dataSnapshot.child(id).getChildren())
-                    {
-                        story=snapshot.getValue(Story.class);
-                        if (timecount>story.getTimestart())
-                        {
-                            countstory++;
-                        }
-                    }
-                    if(countstory>0)
-                    {
-                        storyList.add(story);
-                    }
-                }
-                Collections.reverse(storyList);
-                recyclerView_story.setAdapter(new StoryAdapter(getContext(),storyList));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
     public void checkFollowing()
@@ -168,7 +117,6 @@ public class HomeFragment extends Fragment {
                 {
                     followingList.add(snapshot.getKey());
                 }
-                readStories();
                 readpost();
             }
 
