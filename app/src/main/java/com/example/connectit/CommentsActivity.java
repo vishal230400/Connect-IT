@@ -36,7 +36,6 @@ public class CommentsActivity extends AppCompatActivity {
     public RecyclerView recyclerView;
     public CommentAdapter commentAdapter;
     public List<Comment> commentList;
-
     EditText addcomment;
     ImageView image_profile;
     TextView post;
