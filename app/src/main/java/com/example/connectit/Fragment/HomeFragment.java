@@ -1,6 +1,7 @@
 package com.example.connectit.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -15,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.example.connectit.Adapter.PostAdapter;
+import com.example.connectit.MessagesDisplay;
+import com.example.connectit.MessengerActivity;
 import com.example.connectit.Model.Post;
 import com.example.connectit.Model.Story;
 import com.example.connectit.R;
@@ -102,6 +105,13 @@ public class HomeFragment extends Fragment {
         progressBar=view.findViewById(R.id.progress_circular);
         postAdapter=new PostAdapter(getContext(),postList);
         checkFollowing();
+        view.findViewById(R.id.message).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getContext(), MessengerActivity.class);
+                startActivity(intent);
+            }
+        });
         return view;
     }
 

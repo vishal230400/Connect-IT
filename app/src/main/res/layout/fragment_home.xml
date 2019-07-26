@@ -34,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:layout_alignParentEnd="true"
+            android:id="@+id/message"
             android:src="@drawable/ic_inbox"
             />
         </RelativeLayout>

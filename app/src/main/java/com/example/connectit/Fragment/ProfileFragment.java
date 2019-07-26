@@ -209,7 +209,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 myPhotos();
-                }
+            }
         });
 
         saved_photos.setOnClickListener(new View.OnClickListener() {
@@ -371,7 +371,7 @@ public class ProfileFragment extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            followers.setText(""+dataSnapshot.getChildrenCount());
+                followers.setText(""+dataSnapshot.getChildrenCount());
             }
 
             @Override
