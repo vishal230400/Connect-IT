@@ -89,7 +89,7 @@ public class PostDetailFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_post_detail, container, false);
         SharedPreferences preferences=getContext().getSharedPreferences("PREFS",Context.MODE_PRIVATE);
-        postid=preferences.getString("postid","none");
+        postid=preferences.getString("post_id","none");
         recyclerView=view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getContext());

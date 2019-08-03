@@ -33,6 +33,7 @@ public class MessagesDisplay extends AppCompatActivity {
     public String reciever,recieverimage,recievername;
     public Long time;
     public EditText message;
+    public List<String> id,sent,recieved;
     public TextView send;
     public List<Messenger> msent,mrecieved,mMessages;
     public RecyclerView recyclerView;
@@ -44,17 +45,20 @@ public class MessagesDisplay extends AppCompatActivity {
         setContentView(R.layout.activity_messages_display);
         message=findViewById(R.id.message);
         msent=new ArrayList<>();
+        id=new ArrayList<>();
+        recieved=new ArrayList<>();
+        sent=new ArrayList<>();
         mrecieved=new ArrayList<>();
         mMessages=new ArrayList<>();
         recyclerView=findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setNestedScrollingEnabled(true);
+        //recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
-        linearLayoutManager.setReverseLayout(true);
         recyclerView.setLayoutManager(linearLayoutManager);
+        //recyclerView.scrollToPosition(linearLayoutManager.findLastVisibleItemPosition());
         recyclerView.removeAllViews();
-        messageDisplayAdapter=new MessageDisplayAdapter(mMessages,getApplicationContext());
+        messageDisplayAdapter=new MessageDisplayAdapter(mMessages,getApplicationContext(),id);
         recyclerView.setAdapter(messageDisplayAdapter);
         Intent intent=getIntent();
         reciever=intent.getStringExtra("recieverid");
@@ -109,12 +113,15 @@ public class MessagesDisplay extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 msent.clear();
+                sent.clear();
                 for(DataSnapshot snapshot:dataSnapshot.getChildren())
                 {
                     Messenger messenger=snapshot.getValue(Messenger.class);
                     if(messenger.getReciever().equals(reciever)) {
                         msent.add(messenger);
                         mMessages.clear();
+                        sent.add(messenger.getSender());
+                        id.clear();
                         sort();
                     }
                 }
@@ -132,9 +139,12 @@ public class MessagesDisplay extends AppCompatActivity {
                 for(DataSnapshot snapshot:dataSnapshot.getChildren())
                 {
                     mrecieved.clear();
+                    recieved.clear();
                     Messenger messenger=snapshot.getValue(Messenger.class);
                     if(messenger.getSender().equals(reciever)) {
                         mrecieved.add(messenger);
+                        recieved.add(messenger.getSender());
+                        id.clear();
                         mMessages.clear();
                         sort();
                     }
@@ -166,11 +176,13 @@ public class MessagesDisplay extends AppCompatActivity {
             if(msent.get(i1).getTime() < mrecieved.get(i2).getTime())
             {
                 mMessages.add(msent.get(i1));
+                id.add(sent.get(i1));
                 i1++;
             }
             else
             {
                 mMessages.add(mrecieved.get(i2));
+                id.add(recieved.get(i2));
                 i2++;
             }
         }
@@ -178,12 +190,14 @@ public class MessagesDisplay extends AppCompatActivity {
         while(i1 < size1)
         {
             mMessages.add(msent.get(i1));
+            id.add(sent.get(i1));
             i++;
             i1++;
         }
         while(i2 < size2)
         {
             mMessages.add(mrecieved.get(i2));
+            id.add(recieved.get(i2));
             i++;
             i2++;
         }

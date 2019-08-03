@@ -92,7 +92,6 @@ public class EditProfileActivity extends AppCompatActivity {
       @Override
       public void onClick(View v) {
         CropImage.activity().setAspectRatio(1,1).start(EditProfileActivity.this);
-        finish();
       }
     });
 
@@ -116,7 +115,7 @@ public class EditProfileActivity extends AppCompatActivity {
   {
     DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
 
-    HashMap<String ,Object> hashMap=new HashMap<>();
+    final HashMap<String ,Object> hashMap=new HashMap<>();
     hashMap.put("fullname",fullname);
     hashMap.put("username",username);
     hashMap.put("bio",bio);

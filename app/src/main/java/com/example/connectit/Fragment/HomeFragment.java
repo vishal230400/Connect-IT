@@ -16,10 +16,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.example.connectit.Adapter.PostAdapter;
-import com.example.connectit.MessagesDisplay;
 import com.example.connectit.MessengerActivity;
 import com.example.connectit.Model.Post;
-import com.example.connectit.Model.Story;
 import com.example.connectit.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -29,7 +27,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

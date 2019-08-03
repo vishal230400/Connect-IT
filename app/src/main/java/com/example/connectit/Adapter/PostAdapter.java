@@ -124,7 +124,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         holder.likes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent=new Intent(mContext, FollowersActivity.class);
                 intent.putExtra("id",post.getPostid());
                 intent.putExtra("title","Likes");
@@ -160,7 +159,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
             @Override
             public void onClick(View v) {
                 SharedPreferences.Editor editor=mContext.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit();
-                editor.putString("postid",post.getPostid());
+                editor.remove("post_id");
+                editor.putString("post_id",post.getPostid());
                 editor.apply();
 
                 ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new PostDetailFragment()).commit();

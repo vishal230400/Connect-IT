@@ -1,6 +1,7 @@
 package com.example.connectit.Adapter;
 
 import android.content.Context;
+import android.renderscript.Short4;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,11 @@ import com.example.connectit.Model.User;
 import com.example.connectit.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -26,11 +30,15 @@ public class MessageDisplayAdapter extends RecyclerView.Adapter<MessageDisplayAd
 
     public List<Messenger> messagesList;
     public Context mContext;
+    public int i;
     public FirebaseUser firebaseUser;
+    public List<String> id;
 
-    public MessageDisplayAdapter(List<Messenger> messagesList, Context mContext) {
+    public MessageDisplayAdapter(List<Messenger> messagesList, Context mContext,List<String>id) {
         this.messagesList = messagesList;
         this.mContext = mContext;
+        this.id=id;
+        setHasStableIds(true);
     }
 
     @NonNull
@@ -49,16 +57,31 @@ public class MessageDisplayAdapter extends RecyclerView.Adapter<MessageDisplayAd
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
         holder.message.setText(messagesList.get(position).getMessage());
-        holder.setIsRecyclable(false);
-        DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Users");
+        holder.setIsRecyclable(true);
+        DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Users");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()) {
+                    User user = dataSnapshot1.getValue(User.class);
+                    if(user.getId().equals(id.get(position)))
+                        Glide.with(mContext).load(user.getImageurl()).into(holder.image_profile);
+                }
+                }
 
-        if(messagesList.get(position).getSender().equals(firebaseUser.getUid()))
-        {
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
         }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override
@@ -68,6 +91,7 @@ public class MessageDisplayAdapter extends RecyclerView.Adapter<MessageDisplayAd
 
     @Override
     public int getItemViewType(int position) {
+
         if(messagesList.get(position).getSender().equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
             return 1;
         else return 0;

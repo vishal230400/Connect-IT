@@ -26,92 +26,92 @@ import java.util.List;
 
 public class MessengerActivity extends AppCompatActivity {
 
-    public RecyclerView recyclerView;
-    public EditText search_bar;
-    public List<User> mUsers;
-    public MessengerAdapter messengerAdapter;
+  public RecyclerView recyclerView;
+  public EditText search_bar;
+  public List<User> mUsers;
+  public MessengerAdapter messengerAdapter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_messenger);
-        search_bar=findViewById(R.id.search_bar);
-        mUsers=new ArrayList<>();
-        recyclerView=findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        messengerAdapter=new MessengerAdapter(mUsers,getApplicationContext());
-        recyclerView.setAdapter(messengerAdapter);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_messenger);
+    search_bar=findViewById(R.id.search_bar);
+    mUsers=new ArrayList<>();
+    recyclerView=findViewById(R.id.recycler_view);
+    recyclerView.setHasFixedSize(true);
+    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+    messengerAdapter=new MessengerAdapter(mUsers,getApplicationContext());
+    recyclerView.setAdapter(messengerAdapter);
 
-        readUsers();
+    readUsers();
 
 
-        search_bar.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    search_bar.addTextChangedListener(new TextWatcher() {
+      @Override
+      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
+      }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                searchUser(s.toString().toLowerCase());
-            }
+      @Override
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+        searchUser(s.toString().toLowerCase());
+      }
 
-            @Override
-            public void afterTextChanged(Editable s) {
+      @Override
+      public void afterTextChanged(Editable s) {
 
-            }
-        });
-    }
+      }
+    });
+  }
 
-    public void searchUser(String s) {
-        Query query = FirebaseDatabase.getInstance().getReference("Users").orderByChild("username").startAt(s).endAt(s + "\uf8ff");
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                recyclerView.removeAllViews();
-                mUsers.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    User user = snapshot.getValue(User.class);
-                    mUsers.add(user);
-                }
-                messengerAdapter = new MessengerAdapter(mUsers, getApplicationContext());
-                recyclerView.setAdapter(messengerAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-    }
-
-    private void readUsers( ) {
-        mUsers.clear();
+  public void searchUser(String s) {
+    Query query = FirebaseDatabase.getInstance().getReference("Users").orderByChild("username").startAt(s).endAt(s + "\uf8ff");
+    query.addValueEventListener(new ValueEventListener() {
+      @Override
+      public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
         recyclerView.removeAllViews();
-        DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Users");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(search_bar.getText().toString().equals(""))
-                {
-                    mUsers.clear();
-                    for (DataSnapshot snapshot:dataSnapshot.getChildren())
-                    {
-                        User user=snapshot.getValue(User.class);
-                        if(!user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
-                            mUsers.add(user);
-                    }
-                    messengerAdapter=new MessengerAdapter(mUsers,getApplicationContext());
-                    recyclerView.setAdapter(messengerAdapter);
-                }
-            }
+        mUsers.clear();
+        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+          User user = snapshot.getValue(User.class);
+          mUsers.add(user);
+        }
+        messengerAdapter = new MessengerAdapter(mUsers, getApplicationContext());
+        recyclerView.setAdapter(messengerAdapter);
+      }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+      @Override
+      public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-    }
+      }
+    });
+
+  }
+
+  private void readUsers( ) {
+    mUsers.clear();
+    recyclerView.removeAllViews();
+    DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Users");
+    reference.addValueEventListener(new ValueEventListener() {
+      @Override
+      public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        if(search_bar.getText().toString().equals(""))
+        {
+          mUsers.clear();
+          for (DataSnapshot snapshot:dataSnapshot.getChildren())
+          {
+            User user=snapshot.getValue(User.class);
+            if(!user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
+              mUsers.add(user);
+          }
+          messengerAdapter=new MessengerAdapter(mUsers,getApplicationContext());
+          recyclerView.setAdapter(messengerAdapter);
+        }
+      }
+
+      @Override
+      public void onCancelled(@NonNull DatabaseError databaseError) {
+
+      }
+    });
+  }
 }

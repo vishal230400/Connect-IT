@@ -1,12 +1,25 @@
 package com.example.connectit.Model;
 
 public class Messenger {
-    String sender;
-    String reciever;
-    String message;
-    Long time;
+    String message,sender,reciever;
+    long time;
+
+    public Messenger(String message, String sender, String reciever, long time) {
+        this.message = message;
+        this.sender = sender;
+        this.reciever = reciever;
+        this.time = time;
+    }
 
     public Messenger() {
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getSender() {
@@ -21,30 +34,15 @@ public class Messenger {
         return reciever;
     }
 
-    public void setReceiver(String receiver) {
-        this.reciever = receiver;
+    public void setReciever(String reciever) {
+        this.reciever = reciever;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Long getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(Long time) {
-        this.time = time;
-    }
-
-    public Messenger(String sender, String reciever, String message, Long time) {
-        this.sender = sender;
-        this.reciever = reciever;
-        this.message = message;
+    public void setTime(long time) {
         this.time = time;
     }
 }

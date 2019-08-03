@@ -91,7 +91,6 @@ public class LoginActivity extends AppCompatActivity {
                             else {
                                 pd.dismiss();
                                 Toast.makeText(LoginActivity.this,"Autenticaion Failed!",Toast.LENGTH_SHORT).show();
-
                             }
                         }
                     });
